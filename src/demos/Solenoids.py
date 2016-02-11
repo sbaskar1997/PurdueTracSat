@@ -9,12 +9,12 @@ class sol1:
 
     def open(self):
         self._pi.write(18,1)
-	time.sleep(.02)
+	time.sleep(.1)
 	self._pi.write(18,0)
 
     def close(self):
         self._pi.write(23,1)
-	time.sleep(.02)
+	time.sleep(.1)
 	self._pi.write(23,0)
 
 class sol2:
