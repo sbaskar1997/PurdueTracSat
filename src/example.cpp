@@ -1,0 +1,63 @@
+#include <ros/ros.h>
+// PCL specific includes
+#include <sensor_msgs/PointCloud2.h>
+#include <pcl_conversions/pcl_conversions.h>
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
+#include <pcl/filters/voxel_grid.h>
+#include <iostream>
+#include <cmath>
+#include <std_msgs/MultiArrayLayout.h>
+#include <std_msgs/MultiArrayDimension.h>
+#include <std_msgs/Float32MultiArray.h>
+
+ros::Publisher pub;
+typedef unsigned char uchar;
+
+
+float bytesToFloat(uchar b0, uchar b1, uchar b2, uchar b3)
+{
+  float f;
+  uchar b[] = {b0, b1, b2, b3};
+  memcpy(&f, &b, sizeof(f));
+  return f;
+}
+
+void 
+cloud_cb (const sensor_msgs::PointCloud2ConstPtr& input)
+{
+  //Create container for data
+  sensor_msgs::PointCloud2 output;
+  
+  //Data Processing
+  output = *input;
+  
+  std_msgs::Float32MultiArray arr;
+  arr.data.clear();
+  
+  for (int i = 270 * 16; i < 540 * 16; i += 16)
+  {
+      arr.data.push_back(sqrt(pow(bytesToFloat(output.data[i], output.data[i + 1], output.data[i + 2], output.data[i + 3]), 2) +  pow(bytesToFloat(output.data[i + 4], output.data[i + 5], output.data[i + 6], output.data[i + 7]), 2)));
+  }
+  
+  //std::cout<<"length"<<arr.data.size();
+  //Publish data
+  pub.publish(arr);
+}
+
+int
+main (int argc, char** argv)
+{
+  // Initialize ROS
+  ros::init (argc, argv, "my_pcl_tutorial");
+  ros::NodeHandle nh;
+
+  // Create a ROS subscriber for the input point cloud
+  ros::Subscriber sub = nh.subscribe<sensor_msgs::PointCloud2> ("input", 1, cloud_cb);
+
+  // Create a ROS publisher for the output point cloud
+  pub = nh.advertise<std_msgs::Float32MultiArray> ("arr", 1);
+
+  // Spin
+  ros::spin ();
+}
