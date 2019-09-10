@@ -23,7 +23,7 @@ def move_satellite(flight_time):
         sol2.open()
 
         # Wait some time
-        time.sleep(flight_time)
+        time.sleep(2)
 
         # Close solenoid 1 and 2
         sol1.close()
