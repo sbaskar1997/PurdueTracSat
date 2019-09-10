@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import pigpio
 import time
-from Solenoids import *
+import Solenoids
 
 
 def init_pi():
@@ -14,9 +14,8 @@ def move_satellite():
     if (time != 0):
         # Initialize pi and solenoid 1
         pi = init_pi()
-
-        sol1 = sol1(pi)
-        sol2 = sol2(pi)
+        sol1 = Solenoids.sol1(pi)
+        sol2 = Solenoids.sol2(pi)
 
         # Open solenoid 1 and 2
         sol1.open()
