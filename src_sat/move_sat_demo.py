@@ -9,7 +9,7 @@ def init_pi():
     pi = pigpio.pi()
     return pi
 
-def move_satellite(flight_time):
+def move_satellite():
     # Check if time to move is 0
     if (time != 0):
         # Initialize pi and solenoid 1
@@ -28,3 +28,5 @@ def move_satellite(flight_time):
         # Close solenoid 1 and 2
         sol1.close()
         sol2.close()
+
+move_satellite()
