@@ -10,6 +10,7 @@ def init_pi():
     return pi
 
 def move_satellite():
+    time.sleep(30)
     # Check if time to move is 0
     if (time != 0):
         # Initialize pi and solenoid 1
