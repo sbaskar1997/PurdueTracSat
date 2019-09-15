@@ -3,7 +3,6 @@
 # Import native modules
 import time
 
-
 class sol1:
     def __init__(self, pi):
         self._pi = pi
