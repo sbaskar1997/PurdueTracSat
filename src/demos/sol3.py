@@ -13,9 +13,12 @@ pi.write(20,0) #SOL4 Open
 pi.write(21,0) #SOL4 Close
 
 #Open
-#pi.write(12,1)
-#time.sleep(.2)
-#pi.write(12,0)
+pi.write(12,1)
+time.sleep(.2)
+pi.write(12,0)
+
+
+time.sleep(1)
 
 #Close
 pi.write(16,1)
