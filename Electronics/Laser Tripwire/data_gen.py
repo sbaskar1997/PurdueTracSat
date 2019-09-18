@@ -30,7 +30,6 @@ while True:
         print(x_value, total_1)
 
         x_value += 1
-        #total_1 = (random.randint(0,100)) / 100
         total_1 = ldr.value
 
     time.sleep(.1)

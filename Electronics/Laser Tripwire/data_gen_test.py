@@ -29,6 +29,5 @@ while True:
 
         x_value += 1
         total_1 = (random.randint(0,100)) / 100.0
-        #total_1 = ldr.value
 
     time.sleep(.1)
