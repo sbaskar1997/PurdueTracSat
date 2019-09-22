@@ -12,15 +12,15 @@ pi.write(16,0) #SOL3 Close
 pi.write(20,0) #SOL4 Open
 pi.write(21,0) #SOL4 Close
 
-#Close All
-pi.write(23,1)
-pi.write(25,1)
-pi.write(16,1)
-pi.write(21,1)
-
+#Open
+pi.write(12,1)
 time.sleep(.2)
+pi.write(12,0)
 
-pi.write(23,0)
-pi.write(25,0)
+
+time.sleep(1)
+
+#Close
+pi.write(16,1)
+time.sleep(.2)
 pi.write(16,0)
-pi.write(21,0)
