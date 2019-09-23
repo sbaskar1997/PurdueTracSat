@@ -27,7 +27,7 @@ known_distance = 24
 known_width = 11
 image = cv2.imread('test_distance.jpg')
 marker = find_marker(image)
-focal_length = ((marker[1][0] * known_distance) / known_width)/4
+focal_length = ((marker[1][0] * known_distance) / known_width)
 
 
 image = cv2.imread('test_distance.jpg')
