@@ -14,16 +14,12 @@ while(1):
     gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 
     # Show frame
-    cv.imshow('frame', gray)
+    cv.imshow('frame', frame)
 
-    # Quit if prompted to quit
+    # Quit if prompted to quit (press q)
     if cv.waitKey(1) & 0xFF == ord('q'):
         break
 
 # Release and destroy everything when the simulation is over
 cap.release()
 cv.destroyAllWindows()
-
-
-
-# Function to find distance of something

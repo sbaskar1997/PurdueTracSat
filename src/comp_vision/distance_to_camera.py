@@ -23,15 +23,20 @@ def distance_to_camera(known_width, focal_length, per_width):
     return (known_width * focal_length)/per_width
 
 
+# Known info about paper
 known_distance = 24
 known_width = 11
+
+# Read image
 image = cv2.imread('test_distance.jpg')
+
+# Find the paper in the image
 marker = find_marker(image)
+
+# Calculate focal length of the camera
 focal_length = ((marker[1][0] * known_distance) / known_width)
 
-
-image = cv2.imread('test_distance.jpg')
-marker = find_marker(image)
+# Find distance to camera
 inches = distance_to_camera(known_width, focal_length, marker[1][0])
 
 # draw bounding box
