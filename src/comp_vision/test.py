@@ -14,7 +14,7 @@ while(1):
     gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 
     # Show frame
-    cv.imshow('frame', frame)
+    cv.imshow('frame', gray)
 
     # Quit if prompted to quit (press q)
     if cv.waitKey(1) & 0xFF == ord('q'):

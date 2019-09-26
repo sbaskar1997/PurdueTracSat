@@ -5,6 +5,7 @@ import numpy as np
 import imutils
 import cv2
 
+
 def find_marker(image):
     # Convert image to grayscale, blur it and detect edges (edged img output)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -22,19 +23,26 @@ def find_marker(image):
 def distance_to_camera(known_width, focal_length, per_width):
     return (known_width * focal_length)/per_width
 
+def calibrate_camera(img_path = 'test_distance.jpg'):
+    # Known info about paper
+    known_distance = 24
+    known_width = 11
 
-# Known info about paper
+    # Read image
+    image = cv2.imread(img_path)
+
+    # Find the paper in the image
+    marker = find_marker(image)
+
+    # Calculate focal length of the camera
+    focal_length = ((marker[1][0] * known_distance) / known_width)
+    return focal_length
+
+focal_length = calibrate_camera()
 known_distance = 24
 known_width = 11
-
-# Read image
 image = cv2.imread('test_distance.jpg')
-
-# Find the paper in the image
 marker = find_marker(image)
-
-# Calculate focal length of the camera
-focal_length = ((marker[1][0] * known_distance) / known_width)
 
 # Find distance to camera
 inches = distance_to_camera(known_width, focal_length, marker[1][0])
