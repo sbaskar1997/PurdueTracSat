@@ -5,4 +5,4 @@ Check update logs and/or readme for information about the project
 
 
 Team Members:
-Sandeep Baskar, Pol Francesch Huc, Dante Sanaei, Joshua Fitch, Yash Pahade
+Sandeep Baskar, Pol Francesch Huc, Dante Sanaei, Joshua Fitch, Yash Pahade, Ben Ranft
