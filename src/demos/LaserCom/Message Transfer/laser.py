@@ -6,23 +6,34 @@ import RPi.GPIO as GPIO
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(4,GPIO.OUT)
-
+GPIO.output(4,False)
 with open('data.csv', newline='') as csvfile:
     data = list(csv.reader(csvfile))
 
-data = str(data)
+
 
 for i in range(len(data)):
-    if data[i] == 'binary' or data[i] == '*':
-        print("space")
-        GPIO.output(4,False)
-    elif data[i] == '1':
-        print("flash")
+    #print(data[i])
+    if "binary" in data[i]:
+        #print("start" + str(i))
         GPIO.output(4,True)
-    elif data[i] == '0':
+    elif "1" in data[i]:
+        #print("flash"+ str(i))
+        GPIO.output(4,True)
+    elif "0" in data[i]:
         GPIO.output(4,False)
-        print("no flash")
-    time.sleep(.1)
+        #print("no flash"+ str(i))
+    else:
+        #print("space"+ str(i))
+        GPIO.output(4,False)
+    time.sleep(1.3)
+
+
+
+GPIO.output(4,True)
+time.sleep(4)
+GPIO.output(4,False)
+
 
 
 

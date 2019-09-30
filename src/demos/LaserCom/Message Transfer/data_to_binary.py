@@ -5,7 +5,6 @@ if len(sys.argv) < 2:
     print("Usage: python data_to_binary.py [MESSAGE]")
     sys.exit(1)
 
-start = time.time()
 
 messageArray = sys.argv[1:]
 message = ' '.join(messageArray)
