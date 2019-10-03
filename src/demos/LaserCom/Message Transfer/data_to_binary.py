@@ -1,6 +1,9 @@
 import csv
+<<<<<<< HEAD
 import random
 import time
+=======
+>>>>>>> 9ff79ca9fc3c375193fc7f16abb9c6146ff40174
 import sys
 
 if len(sys.argv) < 2:
@@ -14,6 +17,12 @@ print("Message: " + message)
 messageStringBinary = ' '.join(format(ord(x), 'b') for x in message)
 messageArrayBinary = messageStringBinary.split(" ")
 print(messageArrayBinary)
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> 9ff79ca9fc3c375193fc7f16abb9c6146ff40174
 fieldnames = ["binary"]
 
 with open('data.csv', 'w') as csv_file:
@@ -21,6 +30,11 @@ with open('data.csv', 'w') as csv_file:
     csv_writer.writeheader()
 
 for i in range(len(messageArrayBinary)):
+<<<<<<< HEAD
+=======
+    messageArrayBinary[i] = str(messageArrayBinary[i]).zfill(7)
+    print(messageArrayBinary[i])
+>>>>>>> 9ff79ca9fc3c375193fc7f16abb9c6146ff40174
     for j in range(len(list(messageArrayBinary[i]))):
         with open('data.csv', 'a') as csv_file:
             if j == len(list(messageArrayBinary[i])) - 1 and i != len(messageArrayBinary) - 1:
