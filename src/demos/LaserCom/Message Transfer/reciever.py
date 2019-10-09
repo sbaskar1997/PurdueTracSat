@@ -1,39 +1,37 @@
 import sys
 import time
 import RPi.GPIO as GPIO
-from gpiozero import LightSensor
-ldr = LightSensor(17)
 
+INTERVAL = .05
 
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(4,GPIO.OUT)
-GPIO.output(4,False)
+GPIO.setup(17,GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 threshold = .2
 endTransmission = True
 binaryArray = []
 end = 0
 
 while endTransmission:
-    if ldr.value > threshold:
+    if GPIO.input(17) > threshold:
         #print("start")
-        time.sleep(1.5)
+        time.sleep(INTERVAL+.001)
         while endTransmission:
             binary = ""
             end = 0
             #print("word start")
             for i in range(7):
-                if ldr.value > threshold:
+                if GPIO.input(17) > threshold:
                     end+=1
                     binary += "1"
                     #print("flash")
-                    time.sleep(1.3)
-                elif ldr.value <= threshold:
+                    time.sleep(INTERVAL)
+                elif GPIO.input(17) <= threshold:
                     binary += "0"
                     #print("no flash")
-                    time.sleep(1.3)
-            print(binary)     
+                    time.sleep(INTERVAL)
+            #(binary)     
             binaryArray.append(binary)
-            time.sleep(1.3)
+            time.sleep(INTERVAL)
             if end == 7:
                 endTransmission = False
                 break
