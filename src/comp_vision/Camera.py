@@ -44,22 +44,6 @@ class Camera:
         cap.release()
         cv.destroyAllWindows()
 
-    # Calibrate camera
-    def calibrate(self):
-        # Known info about paper
-        known_distance = 24
-        known_width = 11
-
-        # Read image
-        image = cv.imread(self._img_path)
-
-        # Find the paper in the image
-        marker = self.find_marker(image)
-
-        # Calculate focal length of the camera
-        focal_length = ((marker[1][0] * known_distance) / known_width)
-        return focal_length
-
     # Find distance to object
     def distance_to_camera(self, known_width, focal_length, per_width):
         return (known_width * self.focal_length)/per_width
@@ -89,7 +73,7 @@ class Camera:
         # Convert image to grayscale, blur it and detect edges (edged img output)
         gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
         gray = cv.GaussianBlur(gray, (5,5), 0)
-        edged = cv.Canny(gray, 35, 125)
+        edged = cv.Canny(gray, 35, 125, L2gradient = True)
 
         # Find contours in edged image and keep largest one
         cnts = cv.findContours(edged.copy(), cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
