@@ -4,5 +4,7 @@ All code to control satellite will be put in src folder. src folder will be rest
 Check update logs and/or readme for information about the project
 
 
+
 Team Members:
 Sandeep Baskar, Pol Francesch Huc, Dante Sanaei, Joshua Fitch, Yash Pahade, Alec Leven, Ben Ranft
+
