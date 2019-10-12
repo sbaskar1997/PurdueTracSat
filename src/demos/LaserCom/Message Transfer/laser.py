@@ -2,18 +2,23 @@ import csv
 import sys
 import pandas as pd
 import time
-
 import RPi.GPIO as GPIO
 
+# Setup Raspberry Pi Pins.
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(4,GPIO.OUT)
 GPIO.output(4,False)
 
+# Check if input is correct
 if len(sys.argv) < 2:
     print("Usage: python data_to_binary.py [MESSAGE]")
     sys.exit(1)
 
+#Flash interval
+INTERVAL = .05
 
+
+# Convert message into binary array
 messageArray = sys.argv[1:]
 message = ' '.join(messageArray)
 print("Message: " + message)
@@ -31,11 +36,9 @@ for i in range(len(messageArrayBinary)):
         else:
             digit = list(messageArrayBinary[i])[j]
             data.append(digit)
-
-print(data)
             
 
-
+# Send binary with laser
 for i in range(len(data)):
     #print(data[i])
     if "binary" in data[i]:
@@ -50,7 +53,7 @@ for i in range(len(data)):
     else:
         #print("space"+ str(i))
         GPIO.output(4,False)
-    time.sleep(.5)
+    time.sleep(INTERVAL)
 
 
 

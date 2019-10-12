@@ -2,42 +2,45 @@ import sys
 import time
 import RPi.GPIO as GPIO
 
+#Flash receival interval
+INTERVAL = .05
 
+#Setup Raspberry Pi pins
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(4,GPIO.OUT)
-GPIO.output(4,False)
+GPIO.setup(17,GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 threshold = .2
 endTransmission = True
 binaryArray = []
 end = 0
 
+#Loop until laser begins flashing
 while endTransmission:
     if GPIO.input(17) > threshold:
-        #print("start")
-        time.sleep(.55)
+        time.sleep(INTERVAL+.001) #Phase shift interval
+
+        #Loop until message ends
         while endTransmission:
             binary = ""
             end = 0
-            #print("word start")
+
+            #Begin letter.
             for i in range(7):
                 if GPIO.input(17) > threshold:
                     end+=1
                     binary += "1"
-                    #print("flash")
-                    time.sleep(,5)
+                    time.sleep(INTERVAL)
                 elif GPIO.input(17) <= threshold:
                     binary += "0"
-                    #print("no flash")
-                    time.sleep(.5)
-            print(binary)     
+                    time.sleep(INTERVAL)
+            #print(binary)     
             binaryArray.append(binary)
-            time.sleep(.5)
+            time.sleep(INTERVAL)
             if end == 7:
                 endTransmission = False
                 break
             
             
-            
+#Convert binary array back into text.           
 #print(binaryArray)
 binaryString = ""
 for j in range(len(binaryArray)-1):
