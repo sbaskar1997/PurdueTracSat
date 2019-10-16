@@ -25,8 +25,8 @@ class Camera:
 
 
 
-            # cv.putText(image, '%.2fft' % (inches/12),
-            # (image.shape[1] - 200, image.shape[0] - 20), cv.FONT_HERSHEY_SIMPLEX,
+            # cv2.putText(image, '%.2fft' % (inches/12),
+            # (image.shape[1] - 200, image.shape[0] - 20), cv2.FONT_HERSHEY_SIMPLEX,
             # 2.0, (0, 255, 0), 3)
             cv2.imshow('image', post_frame)
 
