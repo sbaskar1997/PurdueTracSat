@@ -1,88 +1,70 @@
 # Import native modules
 import numpy as np
-import cv2 as cv
+import cv2
 import imutils
+import argparse
 
 class Camera:
     # Contructor
-    def __init__(self, id, img_path = 'test_distance.jpg'):
+    def __init__(self, id):
         self._id = id
-        self._img_path = img_path
 
     # Open camera
     def read_distance(self):
         # Capture video from camera
-        cap = cv.VideoCapture(0)
-        play = True
-        while(play):
+        cap = cv2.VideoCapture(0)
+
+        while(1):
             # Capture frame by frame
             ret, frame = cap.read()
 
-            # Do something to each frame here
             #gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-            cv.imwrite('frame.jpg', frame)
-            image = cv.imread('frame.jpg')
-            marker = self.find_marker(image)
+            cv2.imwrite('frame.jpg', frame)
+            image = cv2.imread('frame.jpg')
+            post_frame = self.circle_detect(image)
 
-            # Find distance to camera
-            inches = self.distance_to_camera(11, 24, marker[1][0])
 
-            # draw bounding box
-            box = cv.cv.BoxPoints(marker) if imutils.is_cv2() else cv.boxPoints(marker)
-            box = np.int0(box)
-            cv.drawContours(image, [box], -1, (0,255,0), 2)
-            cv.putText(image, '%.2fft' % (inches/12),
-            (image.shape[1] - 200, image.shape[0] - 20), cv.FONT_HERSHEY_SIMPLEX,
-            2.0, (0, 255, 0), 3)
-            cv.imshow('image', image)
+
+            # cv.putText(image, '%.2fft' % (inches/12),
+            # (image.shape[1] - 200, image.shape[0] - 20), cv.FONT_HERSHEY_SIMPLEX,
+            # 2.0, (0, 255, 0), 3)
+            cv2.imshow('image', post_frame)
 
             # Quit if prompted to quit (press q)
-            if cv.waitKey(1) & 0xFF == ord('q'):
-                play = False
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
 
         # Release and destroy everything when the simulation is over
         cap.release()
-        cv.destroyAllWindows()
-
-    # Find distance to object
-    def distance_to_camera(self, known_width, focal_length, per_width):
-        return (known_width * self.focal_length)/per_width
-
-    @property
-    def focal_length(self):
-        # Known info about paper
-        known_distance = 24
-        known_width = 11
-
-        # Read image
-        image = cv.imread(self._img_path)
-
-        # Find the paper in the image
-        marker = self.find_marker(image)
-
-        # Calculate focal length of the camera
-        self._focal_length = ((marker[1][0] * known_distance) / known_width)
-        return self._focal_length
-
-    @focal_length.setter
-    def focal_length(self, val):
-        self._focal_length = val
+        cv2.destroyAllWindows()
 
     @staticmethod
-    def find_marker(image):
-        # Convert image to grayscale, blur it and detect edges (edged img output)
-        gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
-        gray = cv.GaussianBlur(gray, (5,5), 0)
-        edged = cv.Canny(gray, 35, 125, L2gradient = True)
+    def circle_detect(image):
+        # load the image, clone it for output, and then convert it to grayscale
+        output = image.copy()
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-        # Find contours in edged image and keep largest one
-        cnts = cv.findContours(edged.copy(), cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
-        cnts = imutils.grab_contours(cnts)
-        c = max(cnts, key = cv.contourArea)
+        # detect circles in the image
+        circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1.2, 200)
 
-        # Compute the bounding box of the paper and return it
-        return cv.minAreaRect(c)
+        # ensure at least some circles were found
+        if circles is not None:
+            # convert the (x, y) coordinates and radius of the circles to integers
+            circles = np.round(circles[0, :]).astype("int")
 
+            # loop over the (x, y) coordinates and radius of the circles
+            for (x, y, r) in circles:
+                # draw the circle in the output image, then draw a rectangle
+                # corresponding to the center of the circle
+                # only draw circle if it is small enough to be considered an actual object
+                if (r < 100):
+                    cv2.circle(output, (x, y), r, (0, 255, 0), 4)
+                    cv2.rectangle(output, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
+
+            # show the output image
+            return output
+        else:
+            return image
 
 
 
