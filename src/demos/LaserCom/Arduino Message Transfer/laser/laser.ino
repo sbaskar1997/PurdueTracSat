@@ -11,24 +11,35 @@
 void setup() {
   // put your setup code here, to run once:
   pinMode(LASERPIN, OUTPUT);
-
+  Serial.begin(9600);
   
   j = 0;
+  int position =  0;
   for(int i=0; i<myText.length(); i++){
     char myChar = myText.charAt(i);
+    
     String binaryString = String((int) myChar, BIN);
-    for (int k = 0; k < 8; k++){
-      bits[i + k] = String(binaryString.charAt(k)).toInt();
+    //Serial.println(binaryString);
+    bits[position] = 0;
+    position = position + 1;
+    //Serial.println(bits[position]);
+    for (int k = 0; k < 7; k++){
+      bits[position] = String(binaryString.charAt(k)).toInt();
+      //Serial.println(bits[position]);
+      position = position + 1;
+      
     }
   }
    size = myText.length() * 8;
- for (int i; i > size; i++){
+
+
+   
+ for (int i=0; i < size; i++){
   Serial.print(bits[i]);
-  if (!(i%8)){
-     Serial.println("");
-  }
  }
- }
+ Serial.println("real");
+}
+
 
 void loop() {
   
@@ -40,10 +51,14 @@ void loop() {
   
   for(int i = j; i < 8 + j; i++){
     digitalWrite(LASERPIN, bits[i]);
-    delay(10);
+    //Serial.print(bits[i]);
+    
+    delay(1);
   }
   j+=8;
-  if (j >= size-8){
+  //Serial.print(" ");
+  if (j >= size){
+    //Serial.println("");
     j = 0;
   }
   
