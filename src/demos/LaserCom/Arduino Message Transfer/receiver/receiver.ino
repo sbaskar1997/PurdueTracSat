@@ -1,5 +1,5 @@
 #define SOLARPIN A0
-#define THRESHOLD 10
+#define THRESHOLD 30
 
 int ascii = 0;
 int ambientReading = 10;
@@ -19,23 +19,22 @@ void loop() {
 
   
   if (reading > ambientReading + THRESHOLD) {
-    delay(10);
+    delay(1);
     for (int i = 0; i < 8; i++){
       if (analogRead(SOLARPIN) > ambientReading + THRESHOLD){
+        
         bits[i] = 1;
       } else{
         bits[i] = 0;
       }
-      delay(1);
+     // Serial.println(analogRead(SOLARPIN));
+    delayMicroseconds(1000);
     }
   
     
-    /*
-    for (int l = 0; l < 8; l++){
-      Serial.print(bits[l]);
-    }
-    Serial.println("");
-    */
+    
+    
+    
     
     int i = 0;
     int len  = 8;
@@ -50,10 +49,13 @@ void loop() {
     char aChar = (int) lround(sum);
     Serial.print(aChar);
 
-    
-    if (k++ == 7){
+    if (aChar == '#'){
       Serial.println("");
+    }/*
+    for (int l = 0; l < 8; l++){
+      Serial.print(bits[l]);
     }
+    Serial.println("");*/
   }
 
 }
