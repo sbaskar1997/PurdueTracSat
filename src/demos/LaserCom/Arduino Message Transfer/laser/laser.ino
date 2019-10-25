@@ -2,7 +2,7 @@
 
   // 01011010
   //int bits[] = {LOW, HIGH, LOW, HIGH, HIGH, LOW, HIGH, LOW};
-  String myText = "My name is Maximus Decimus Meridius My name is Maximus #";
+  String myText = "1,100,90,50#";
   int bits[500];
   int j;
   int size;
