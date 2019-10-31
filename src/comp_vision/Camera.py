@@ -45,7 +45,7 @@ class Camera:
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
         # detect circles in the image
-        circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1.2, 200)
+        circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1.2, 400)
 
         # ensure at least some circles were found
         if circles is not None:
@@ -57,7 +57,10 @@ class Camera:
                 # draw the circle in the output image, then draw a rectangle
                 # corresponding to the center of the circle
                 # only draw circle if it is small enough to be considered an actual object
-                if (r < 100):
+                if (r < 70):
+                    eta = 11.875/54;                # actual_distance/r_assoc (use one test case to calibrate correction factor)
+                    offset = r * eta - 11.875;      # offset for moving object closer or greater
+                    dist_act = 11.875 - offset      # subtract offset to reference distance
                     cv2.circle(output, (x, y), r, (0, 255, 0), 4)
                     cv2.rectangle(output, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
 
