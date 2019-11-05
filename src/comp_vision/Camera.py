@@ -30,7 +30,7 @@ class Camera:
             # Detect circle from image
             circle_detect_worker.start((image,))
             #post_frame = self.circle_detect(image)
-            if (iteration > 25) and not circle_det_ran:
+            if (iteration > 50) and not circle_det_ran:
                 post_frame = circle_detect_worker.get_results()
                 iteration = 0
                 circle_det_ran = 1
