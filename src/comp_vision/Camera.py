@@ -3,8 +3,10 @@ import numpy as np
 import cv2
 import imutils
 import argparse
-import threading
 import time
+
+# Import custom modules
+from helper import ThreadWorker
 
 class Camera:
     # Contructor
@@ -27,9 +29,8 @@ class Camera:
             read_and_write_worker.start((cap,))
             image = read_and_write_worker.get_results()
 
-            # Detect circle from image
+            # Detect circle from image at every 25 frames
             circle_detect_worker.start((image,))
-            #post_frame = self.circle_detect(image)
             if (iteration > 25) and not circle_det_ran:
                 post_frame = circle_detect_worker.get_results()
                 iteration = 0
@@ -37,15 +38,13 @@ class Camera:
             else:
                 circle_det_ran = 0
 
-
-
-            # cv2.putText(image, '%.2fft' % (inches/12),
-            # (image.shape[1] - 200, image.shape[0] - 20), cv2.FONT_HERSHEY_SIMPLEX,
-            # 2.0, (0, 255, 0), 3)
+            # If circle detection code ran, show image, if not do not show image
             if (post_frame is not None) and (circle_det_ran):
                 cv2.imshow('image', post_frame)
             else:
                 cv2.imshow('image', image)
+
+            # Update frame count
             iteration = iteration + 1
 
             # Quit if prompted to quit (press q)
@@ -94,63 +93,9 @@ class Camera:
     @staticmethod
     def read_and_write(cap):
         ret, frame = cap.read()
-
-        #gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
         cv2.imwrite('frame.jpg', frame)
         image = cv2.imread('frame.jpg')
         return image
-
-
-class ThreadWorker():
-    '''
-    The basic idea is given a function create an object.
-    The object can then run the function in a thread.
-    It provides a wrapper to start it,check its status,and get data out the function.
-    '''
-    def __init__(self,func):
-        self.thread = None
-        self.data = None
-        self.func = self.save_data(func)
-
-    def save_data(self,func):
-        '''modify function to save its returned data'''
-        def new_func(*args, **kwargs):
-            self.data=func(*args, **kwargs)
-
-        return new_func
-
-    def start(self,params = None):
-        self.data = None
-        if self.thread is not None:
-            if self.thread.isAlive():
-                return 'running' #could raise exception here
-
-        #unless thread exists and is alive start or restart it
-        if params is not None:
-            self.thread = threading.Thread(target=self.func,args=params)
-        else:
-            self.thread = threading.Thread(target=self.func)
-        self.thread.start()
-        return 'started'
-
-    def status(self):
-        if self.thread is None:
-            return 'not_started'
-        else:
-            if self.thread.isAlive():
-                return 'running'
-            else:
-                return 'finished'
-
-    def get_results(self):
-        if self.thread is None:
-            return 'not_started' #could return exception
-        else:
-            if self.thread.isAlive():
-                self.thread.join()
-                return self.data
-            else:
-                return self.data
 
 
 camera = Camera('sat1')
