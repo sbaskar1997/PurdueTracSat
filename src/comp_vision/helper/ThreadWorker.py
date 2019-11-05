@@ -2,7 +2,7 @@ import threading
 import imutils
 import argparse
 
-class ThreadWorker():
+class Threader():
     '''
     The basic idea is given a function create an object.
     The object can then run the function in a thread.

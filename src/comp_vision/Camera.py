@@ -1,12 +1,13 @@
 # Import native modules
 import numpy as np
 import cv2
-import imutils
-import argparse
-import time
+import sys
+import os
 
 # Import custom modules
-from helper import ThreadWorker
+sys.path.append(os.path.join('../comp_vision/helper'))
+from ThreadWorker import *
+
 
 class Camera:
     # Contructor
@@ -19,8 +20,8 @@ class Camera:
         cap = cv2.VideoCapture(0)
 
         # Create threads for circle detect and reading/writing images
-        circle_detect_worker = ThreadWorker(self.circle_detect)
-        read_and_write_worker = ThreadWorker(self.read_and_write)
+        circle_detect_worker = Threader(self.circle_detect)
+        read_and_write_worker = Threader(self.read_and_write)
         iteration = 0
         post_frame = None
 
@@ -62,7 +63,7 @@ class Camera:
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
         # detect circles in the image
-        circles_thread = ThreadWorker(cv2.HoughCircles)
+        circles_thread = Threader(cv2.HoughCircles)
         circles_thread.start((gray,cv2.HOUGH_GRADIENT, 1.2, 200,))
         circles = circles_thread.get_results()
         #circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1.2, 400)
@@ -96,7 +97,6 @@ class Camera:
         cv2.imwrite('frame.jpg', frame)
         image = cv2.imread('frame.jpg')
         return image
-
 
 camera = Camera('sat1')
 camera.read_distance()
