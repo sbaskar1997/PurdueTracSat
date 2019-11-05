@@ -17,7 +17,6 @@ class Camera:
         cap = cv2.VideoCapture(0)
 
         # Create threads for circle detect and reading/writing images
-        start = time.time()
         circle_detect_worker = ThreadWorker(self.circle_detect)
         read_and_write_worker = ThreadWorker(self.read_and_write)
         iteration = 0
@@ -31,7 +30,7 @@ class Camera:
             # Detect circle from image
             circle_detect_worker.start((image,))
             #post_frame = self.circle_detect(image)
-            if (iteration > 50):
+            if (iteration > 25) and not circle_det_ran:
                 post_frame = circle_detect_worker.get_results()
                 iteration = 0
                 circle_det_ran = 1
@@ -65,7 +64,7 @@ class Camera:
 
         # detect circles in the image
         circles_thread = ThreadWorker(cv2.HoughCircles)
-        circles_thread.start((gray,cv2.HOUGH_GRADIENT, 1.2, 150,))
+        circles_thread.start((gray,cv2.HOUGH_GRADIENT, 1.2, 200,))
         circles = circles_thread.get_results()
         #circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1.2, 400)
 
@@ -80,8 +79,7 @@ class Camera:
                 # draw the circle in the output image, then draw a rectangle
                 # corresponding to the center of the circle
                 # only draw circle if it is small enough to be considered an actual object
-                if (r < 100):
-                    print(r)
+                if (r < 200):
                     eta = 11.875/54;                # actual_distance/r_assoc (use one test case to calibrate correction factor)
                     offset = r * eta - 11.875;      # offset for moving object closer or greater
                     dist_act = 11.875 - offset      # subtract offset to reference distance
