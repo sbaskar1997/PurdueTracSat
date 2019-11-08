@@ -102,3 +102,7 @@ class Camera:
         cv2.imwrite('frame.jpg', frame)
         image = cv2.imread('frame.jpg')
         return image
+
+#if (read from laser) 
+camera = Camera('sat1')
+camera.read_distance()
