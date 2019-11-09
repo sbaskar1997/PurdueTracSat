@@ -1,21 +1,31 @@
 #define LASERPIN 12
 
-  // 01011010
-  //int bits[] = {LOW, HIGH, LOW, HIGH, HIGH, LOW, HIGH, LOW};
-  String myText = "1,100,90,50#";
+  const byte numChars = 32;
+  char receivedChars[numChars];
+  boolean newData = false;
+  boolean inputRetreived = false;
+
+  //String myText = "1,100,90,500#";
+  String myText = receivedChars;
   int bits[500];
   int j;
   int size;
-
+  void(* resetFunc) (void) = 0;
   
 void setup() {
   // put your setup code here, to run once:
   pinMode(LASERPIN, OUTPUT);
   Serial.begin(9600);
+  Serial.println("Waiting for data...");  
+  while (inputRetreived == false){
+    recvWithStartEndMarkers();
+    showNewData();
+  }
+  String myText = receivedChars;
   
   j = 0;
   int position =  0;
-  Serial.println(myText.length());
+  //Serial.println(myText.length());
   for(int i=0; i<myText.length(); i++){
     char myChar = myText.charAt(i);
     
@@ -46,7 +56,7 @@ void setup() {
     Serial.println(myText.charAt(m++));
   }
  }
- Serial.println("real");
+ Serial.println("Starting...");
 }
 
 
@@ -54,6 +64,9 @@ void loop() {
   
 
   // Start bit
+  if (Serial.available() > 0 && Serial.read() == 48) {
+    resetFunc();
+  }
   digitalWrite(LASERPIN, HIGH);
   delay(1);
   digitalWrite(LASERPIN,LOW);
@@ -76,4 +89,47 @@ void loop() {
 
   delay(5);
 
+}
+
+
+void recvWithStartEndMarkers() {
+    static boolean recvInProgress = false;
+    static byte ndx = 0;
+    char startMarker = '<';
+    char endMarker = '>';
+    char rc;
+ 
+ // if (Serial.available() > 0) {
+    while (Serial.available() > 0 && newData == false) {
+        rc = Serial.read();
+
+        if (recvInProgress == true) {
+            if (rc != endMarker) {
+                receivedChars[ndx] = rc;
+                ndx++;
+                if (ndx >= numChars) {
+                    ndx = numChars - 1;
+                }
+            }
+            else {
+                receivedChars[ndx] = '\0'; // terminate the string
+                recvInProgress = false;
+                ndx = 0;
+                newData = true;
+            }
+        }
+
+        else if (rc == startMarker) {
+            recvInProgress = true;
+        }
+    }
+}
+
+void showNewData() {
+    if (newData == true) {
+        Serial.print("Inputted Message: ");
+        Serial.println(receivedChars);
+        inputRetreived = true;
+        newData = false;
+    }
 }
