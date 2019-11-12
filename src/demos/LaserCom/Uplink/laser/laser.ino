@@ -4,7 +4,6 @@
   char receivedChars[numChars];
   boolean newData = false;
   boolean inputRetreived = false;
-
   //String myText = "1,100,90,500#";
   String myText = receivedChars;
   int bits[500];
@@ -47,8 +46,6 @@ void setup() {
     }
   }
    size = myText.length() * 8;
-
-
   int m = 0;
  for (int i=0; i < size; i++){
   Serial.print(bits[i]);
@@ -61,8 +58,6 @@ void setup() {
 
 
 void loop() {
-  
-
   // Start bit
   if (Serial.available() > 0 && Serial.read() == 48) {
     resetFunc();
@@ -70,11 +65,9 @@ void loop() {
   digitalWrite(LASERPIN, HIGH);
   delay(1);
   digitalWrite(LASERPIN,LOW);
-  
   for(int i = j; i < 8 + j; i++){
     digitalWrite(LASERPIN, bits[i]);
     //Serial.print(bits[i]);
-    
     delayMicroseconds(1000);
   }
   j+=8;
@@ -83,12 +76,8 @@ void loop() {
     //Serial.println("");
     j = 0;
   }
-  
-  
   digitalWrite(LASERPIN, LOW);
-
   delay(5);
-
 }
 
 
