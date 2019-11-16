@@ -1,6 +1,7 @@
 from easygopigo3 import EasyGoPiGo3
 from time import time, sleep
 from serial import Serial
+from detection_demo import detection_demo
 import Camera
 
 
@@ -38,6 +39,5 @@ elif inputVector[0] == 2:
     gpg.drive_cm(inputVector[1])
 
 print('dante done')
-cam = Camera.Camera('oh god')
-cam.read_distance()
+detection_demo()
 
