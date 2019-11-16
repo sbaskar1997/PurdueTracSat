@@ -16,53 +16,20 @@ class Camera:
     # Contructor
     def __init__(self, id):
         self._id = id
+        self._cap = None
 
-    # Open camera
-    def read_distance(self):
-        # Capture video from camera
-        cap = cv2.VideoCapture(0)
+    # Start camera
+    def start_camera(self):
+        self._cap = cv2.VideoCapture(0)
 
-        # Create threads for circle detect and reading/writing images
-        circle_detect_worker = Threader(self.circle_detect)
-        read_and_write_worker = Threader(self.read_and_write)
-        gpg = EasyGoPiGo3()
-        iteration = 0
-        post_frame = None
-        gpg.forward()
-        circle_detect = False
-        while(not circle_detect):
-            # Read and write each image from camera
-            read_and_write_worker.start((cap,))
-            image = read_and_write_worker.get_results()
+    # Read and write images
+    def read_and_write(self):
+        ret, frame = self._cap.read()
+        cv2.imwrite('frame.jpg', frame)
+        image = cv2.imread('frame.jpg')
+        return image
 
-            # Detect circle from image at every 25 frames
-            circle_detect_worker.start((image,))
-
-            #post_frame = self.circle_detect(image)
-            if (iteration > 10) and not circle_det_ran:
-                [post_frame, circle_detect] = circle_detect_worker.get_results()
-                iteration = 0
-                circle_det_ran = 1
-            else:
-                circle_det_ran = 0
-
-            # If circle detection code ran, show image, if not do not show image
-            # Update frame count
-            iteration = iteration + 1
-
-            # Quit if prompted to quit (press q)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-
-        # Release and destroy everything when the simulation is over
-        gpg.stop()
-        while(1):
-            cv2.imshow('img',post_frame)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-        cap.release()
-        cv2.destroyAllWindows()
-
+    # Circle detection and distance reading
     @staticmethod
     def circle_detect(image):
         # load the image, clone it for output, and then convert it to grayscale
@@ -74,7 +41,7 @@ class Camera:
         circles_thread.start((gray,cv2.HOUGH_GRADIENT, 1.0, 100,))
         circles = circles_thread.get_results()
         #circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1.2, 400)
-        circle_detect = False
+        circle_detected = False
 
         # ensure at least some circles were found
         if circles is not None:
@@ -86,22 +53,23 @@ class Camera:
                 # draw the circle in the output image, then draw a rectangle
                 # corresponding to the center of the circle
                 # only draw circle if it is small enough to be considered an actual object
-                if ((r < 200) and (r > 0)):
+
+                if (r < 200 and r > 0):
                     eta = 11.875/54;                # actual_distance/r_assoc (use one test case to calibrate correction factor)
                     offset = r * eta - 11.875;      # offset for moving object closer or greater
                     dist_act = 11.875 - offset      # subtract offset to reference distance
+
+                    # Draw circle
                     cv2.circle(output, (x, y), r, (0, 255, 0), 4)
                     cv2.rectangle(output, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
-                    circle_detect = True
-                    return [output, True]
-                else:
-                    return [output, False]
+                    circle_detected = True
+
+            # show the output image
+            return [output, circle_detected]
         else:
             return [image, False]
 
     @staticmethod
-    def read_and_write(cap):
-        ret, frame = cap.read()
-        cv2.imwrite('frame.jpg', frame)
-        image = cv2.imread('frame.jpg')
-        return image
+    def show_image(image):
+        cv2.imshow('img', image)
+
