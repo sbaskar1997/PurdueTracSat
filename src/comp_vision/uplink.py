@@ -2,7 +2,8 @@ from easygopigo3 import EasyGoPiGo3
 from time import time, sleep
 from serial import Serial
 import Camera
-'''
+
+
 ser = Serial('/dev/ttyACM0', 9600)
 dataArray = []
 i = -1
@@ -18,15 +19,14 @@ while (correct <= 3):
 inputVectorString = inputVectorString[:-4]
 inputVectorString = inputVectorString.decode('utf-8')
 inputVector = inputVectorString.split(",")
-inputVector = list(map(int,inputVector))
 print(inputVector)
-'''
+
+inputVector = list(map(int,inputVector))
+
 gpg = EasyGoPiGo3()
-inputVector = [1, 100, 90, 50]
+#inputVector = [1, 100, 90, 50]
 #arr = [option,vertical distance, angle, horizontal distance]
-print("test1")
 if inputVector[0] == 1:
-    print("test2")
     gpg.drive_cm(inputVector[1])
     gpg.turn_degrees(inputVector[2])
     gpg.drive_cm(inputVector[3])

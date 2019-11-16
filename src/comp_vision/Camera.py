@@ -39,7 +39,7 @@ class Camera:
             circle_detect_worker.start((image,))
 
             #post_frame = self.circle_detect(image)
-            if (iteration > 50) and not circle_det_ran:
+            if (iteration > 10) and not circle_det_ran:
                 [post_frame, circle_detect] = circle_detect_worker.get_results()
                 iteration = 0
                 circle_det_ran = 1
@@ -47,7 +47,6 @@ class Camera:
                 circle_det_ran = 0
 
             # If circle detection code ran, show image, if not do not show image
-
             # Update frame count
             iteration = iteration + 1
 
@@ -57,6 +56,10 @@ class Camera:
 
         # Release and destroy everything when the simulation is over
         gpg.stop()
+        while(1):
+            cv2.imshow('img',post_frame)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
         cap.release()
         cv2.destroyAllWindows()
 
@@ -68,7 +71,7 @@ class Camera:
 
         # detect circles in the image
         circles_thread = Threader(cv2.HoughCircles)
-        circles_thread.start((gray,cv2.HOUGH_GRADIENT, 1.2, 200,))
+        circles_thread.start((gray,cv2.HOUGH_GRADIENT, 1.0, 100,))
         circles = circles_thread.get_results()
         #circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1.2, 400)
         circle_detect = False
@@ -83,18 +86,18 @@ class Camera:
                 # draw the circle in the output image, then draw a rectangle
                 # corresponding to the center of the circle
                 # only draw circle if it is small enough to be considered an actual object
-                if (r < 200):
+                if ((r < 200) and (r > 0)):
                     eta = 11.875/54;                # actual_distance/r_assoc (use one test case to calibrate correction factor)
                     offset = r * eta - 11.875;      # offset for moving object closer or greater
                     dist_act = 11.875 - offset      # subtract offset to reference distance
                     cv2.circle(output, (x, y), r, (0, 255, 0), 4)
                     cv2.rectangle(output, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
                     circle_detect = True
-
-            # show the output image
-            return [output, circle_detect]
+                    return [output, True]
+                else:
+                    return [output, False]
         else:
-            return [image, circle_detect]
+            return [image, False]
 
     @staticmethod
     def read_and_write(cap):

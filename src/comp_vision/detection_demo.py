@@ -1,9 +1,7 @@
 # Import native modules
 from easygopigo3 import EasyGoPiGo3
 import time
+from Camera import Camera
 
-gpg = EasyGoPiGo3()
-
-gpg.forward()
-time.sleep(5)
-gpg.stop()
+cam = Camera('asdf')
+cam.read_distance()
