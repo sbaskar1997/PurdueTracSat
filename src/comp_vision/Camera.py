@@ -17,10 +17,18 @@ class Camera:
     def __init__(self, id):
         self._id = id
         self._cap = None
+        self._obstacle_distance = None
+        self._circle_center = None
 
     # Start camera
     def start_camera(self):
         self._cap = cv2.VideoCapture(0)
+        self._cap.release()
+        self._cap = cv2.VideoCapture(0)
+    
+    # Stop camera
+    def stop_camera(self):
+        self._cap.release()
 
     # Read and write images
     def read_and_write(self):
@@ -42,6 +50,9 @@ class Camera:
         circles = circles_thread.get_results()
         #circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1.2, 400)
         circle_detected = False
+        
+        # Initialize variables
+        dist_act = None
 
         # ensure at least some circles were found
         if circles is not None:
@@ -65,9 +76,9 @@ class Camera:
                     circle_detected = True
 
             # show the output image
-            return [output, circle_detected]
+            return [output, circle_detected, [x,y], dist_act]
         else:
-            return [image, False]
+            return [image, False, None, None]
 
     @staticmethod
     def show_image(image):
