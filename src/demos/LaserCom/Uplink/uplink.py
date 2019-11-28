@@ -14,7 +14,7 @@ while (correct <= 3):
         inputVectorString = dataArray[i]
         correct = correct + 1
 
-inputVectorString = inputVectorString[:-4]
+inputVectorString = inputVectorString[:-3]
 inputVectorString = inputVectorString.decode('utf-8')
 inputVector = inputVectorString.split(",")
 print(inputVector)
