@@ -1,6 +1,6 @@
 from serial import Serial
 
-ser = Serial('/dev/tty.usbmodem143201', 9600)
+ser = Serial('/dev/tty.usbmodem14301', 9600)
 dataArray = []
 i = -1;
 correct = 0;
@@ -13,6 +13,6 @@ while (correct <= 3):
         correct = correct + 1
     
 
-inputVectorString = inputVectorString[:-4]
+inputVectorString = inputVectorString[:-3]
 inputVector = inputVectorString.split(",")
 print(inputVector)

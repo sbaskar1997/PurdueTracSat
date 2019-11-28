@@ -10,7 +10,8 @@ void setup() {
   // Setup Code.
   pinMode(SOLARPIN, INPUT);
   Serial.begin(9600);
-  ambientReading = analogRead(SOLARPIN); //Set the ambient reading of the receiver.
+  ambientReading = analogRead(SOLARPIN);
+  Serial.println(ambientReading);//Set the ambient reading of the receiver.
   
 }
 
