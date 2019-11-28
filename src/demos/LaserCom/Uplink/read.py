@@ -1,5 +1,11 @@
 from serial import Serial
+from lasercom import lasercom
 
+coms = lasercom()
+
+vector = coms.uplink('/dev/tty.usbmodem14301')
+
+'''
 ser = Serial('/dev/tty.usbmodem14301', 9600)
 dataArray = []
 i = -1;
@@ -16,3 +22,4 @@ while (correct <= 3):
 inputVectorString = inputVectorString[:-3]
 inputVector = inputVectorString.split(",")
 print(inputVector)
+'''
