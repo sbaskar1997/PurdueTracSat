@@ -1,6 +1,6 @@
 #define LASERPIN 12
 
-  const byte numChars = 32;
+  const byte numChars = 132;
   char receivedChars[numChars];
   boolean newData = false;
   boolean inputRetreived = false;
