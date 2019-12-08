@@ -14,7 +14,7 @@ pi.write(21,0) #SOL4 Close
 
 #Close All
 pi.write(23,1)
-#pi.write(25,1)
+pi.write(25,1)
 #pi.write(16,1)
 #pi.write(21,1)
 
