@@ -1,0 +1,31 @@
+import time
+import sys
+import pigpio
+
+#Connect
+pi = pigpio.pi()
+
+#Initialize
+
+
+#Forward
+print("for")
+
+pi.set_servo_pulsewidth(17,1800)
+time.sleep(5)
+
+#Stop
+print("stop")
+pi.set_servo_pulsewidth(17,1500)
+time.sleep(2)
+
+#Backwards
+print("back")
+pi.set_servo_pulsewidth(17,1200)
+time.sleep(5)
+
+#Turn off
+
+pi.set_servo_pulsewidth(17,1500)
+
+pi.stop()
