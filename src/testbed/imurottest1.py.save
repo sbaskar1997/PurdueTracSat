@@ -1,0 +1,29 @@
+import time
+import numpy as np
+from easygopigo3 import EasyGoPiGo3
+from di_sensors.inertial_measurement_unit import InertialMeasurementUnit
+
+imu = InertialMeasurementUnit(bus="GPG3_AD1")
+gpg = EasyGoPiGo3()
+a = True
+tinit = time.time()
+rotratevec = np.array([])
+avec = np.array([])
+tvec = np.array([])
+
+while a ==True:
+    gpg.right()
+    t=time.time() - tinit
+    gyro = imu.read_gyroscope()
+    accelx = gyro[01    xddotvec=np.append(xddotvec,accelx)
+    tvec=np.append(tvec,t)
+    vel = np.trapz(xddotvec,tvec)
+    xdotvec=np.append(xdotvec,vel)
+    dist = np.trapz(xdotvec,tvec)
+    print(accelx,vel,dist)
+    if(t>10):
+        a=False
+        gpg.stop()
+    if(dist>1):
+        a=False
+        gpg.stop()
