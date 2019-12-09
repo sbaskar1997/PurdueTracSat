@@ -20,56 +20,65 @@ def purge_pi(pi):
     ports =[18,23,24,25,12,16,20,21]
     for n in ports:
          pi.write(n,0)
-def move_forward(time_flight = 1):
-    #tstart = time.time()
-    if (time_flight != 0):
-        pi = init_pi()
-        purge_pi(pi)
+def move_forward(sol1,sol2):    
         #Initialize Solenoids 1-2
-        sol1 = Solenoids.sol1() #solenoid to move forward force
-        sol2 = Solenoids.sol2() #solenoid to provide backward force
+        #sol1 = Solenoids.sol1() #solenoid to move forward force
+        #sol2 = Solenoids.sol2() #solenoid to provide backward force
         #start with Solenoids closed
-        sol1.close()
-        sol2.close()
+    sol1.close()
+    sol2.close()
+    time.sleep(.5)
     #Open solenoid 1
-        trun = 1.5
-        sol1.open()
-        time.sleep(trun)
-        sol1.close()
+    trun = 1.5
+    sol1.open()
+    time.sleep(trun)
+    sol1.close()
         #
    #return(tstop)
-def stop()
-   tbrake = time.time()
+def stop(sol1,sol2)
+   #tbrake = time.time()
+   
    sol1.close()
-   while ((time.time()-tbrake)<1.5):
-    #sol1.close()
-        sol2.open()
+   sol2.open()
+   time.sleep(1.5)
    sol2.close()
 
-def turnright()
-    time.sleep(2)
-    pi.set_servo_pulsewidth(17,1800)
-    time.sleep(2)
-    pi.set_servo_pulsewidth(17,1100)
+#def turnright()
+  #  time.sleep(.5)
+#    pi.set_servo_pulsewidth(17,1800)
+ #   time.sleep(2)
+  #  pi.set_servo_pulsewidth(17,1100)
 def obstaclesat():
+    pi = init_pi()
+    purge_pi(pi)
+    sol1 = Solenoids.sol1() #solenoid to move forward force
+    sol2 = Solenoids.sol2() #solenoid to provide backward force
     pi.set_servo_pulsewidth(17,1100)  
-    move_forward()  
+    move_forward(sol1,sol2)  
     [circle_detected, center, obj_distance] = detection_demo()
- 
+    
+    
     #if (center[0] > 320):
       #  direction = 'right'
      #   rotate_dir = -1
     #else:
         #direction = 'left'
         #rotate_dir = 1
-    
-    while (circle_detected):
+    first_iteration= True
+    while(circle_detected):
         #tnow = tstart - time.time() #find time to keep braking solenoid on
+        
         [circle_detected, center, obj_distance] = detection_demo(infinite_loop = False)
-        stop() #use stop function
-
+        if first_iteration:
+            stop(sol1,sol2) #use stop function
+            first_iteration = False
+        else:
+            pi.set_servo_pulsewidth(17,1800)
+            time.sleep(2)
+            pi.set_servo_pulsewidth(17,1100)
     #Close all solenoids after ten seconds
-    time.sleep(10)
+    pi.set_servo_pulsewidth(17,1100)
+    time.sleep(5)
     sol1.close()
     sol2.close()
 
