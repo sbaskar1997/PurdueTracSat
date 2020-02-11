@@ -1,0 +1,14 @@
+from easygopigo3 import EasyGoPiGo3
+from time import time, sleep
+
+gpg = EasyGoPiGo3()
+
+current_speed = 50
+end_speed = 400
+step = (end_speed - current_speed) / 20
+gpg.set_speed(current_speed)
+
+gpg.forward()
+while current_speed <= end_speed:
+sleep(0.1)
+gpg.set_speed(current_speed)
