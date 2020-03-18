@@ -3,7 +3,7 @@ from serial import Serial
 class lasercom():
 
     #The uplink function is used to read an array of data received by the lasercom system
-    def uplink(self, port):
+    def receiveData(self, port):
         ser = Serial(port, 9600)
         dataArray = []
         i = -1
@@ -25,9 +25,9 @@ class lasercom():
         return inputVector
 
     # the Downlink function sends an array of data into the lasercom system
-    def downlink(self, port, data):
+    def sendData(self, port, data):
         ser = Serial(port, 9600)
-        data = "<" + data + "#>"
+        data = "<" + data + ">"
         print(ser.readline())
         ser.write(data.encode())
         print(ser.readline())
