@@ -80,7 +80,8 @@ void recvWithStartEndMarkers() {
                 }
             }
             else {
-                receivedChars[ndx] = '\0'; // terminate the string
+                receivedChars[ndx] = '#';
+                receivedChars[ndx+1] = '\0'; // terminate the string
                 recvInProgress = false;
                 ndx = 0;
                 newData = true;
