@@ -7,23 +7,33 @@ from serial import Serial
 from datetime import datetime
 import pytz
 
+if len(sys.argv) < 3:
+    print("Error: Groundstation software requires both uplink and downlink ports as CLI arguments \nEx. python groundstation COM3 COM4")
+    sys.exit()
+
+
 coms = lasercom()
-uplinkPort = 'COM3'
-downlinkPort = 'COM4'
+uplinkPort = sys.argv[1]
+downlinkPort = sys.argv[2]
 coms.resetArduino(uplinkPort)
-#coms.sendData('COM3', "tracsat")
 ser = Serial(downlinkPort, 9600)
 root = tk.Tk()
 root.title("TracSat Ground Station")
 root.geometry("900x450")
 #root.resizable(width=False, height=False)
-root.minsize(width=900, height=450)
-
+root.minsize(width=900, height=530)
 pauseCommand = "empty"
 seconds_MC = 0
 minutes_MC = 0
 hours_MC = 0
 stopMissionClock = 1
+plot = tk.PhotoImage(file = r"icon_small.png")
+
+#################
+######UPLINK#####
+#################
+
+
 
 uplinkLabel = tk.Label(root, text='UPLINK', font='Helvetica 11 bold')
 command = tk.Label(root, text="Command:")
@@ -130,7 +140,7 @@ pause = tk.Button(root, text ="Pause", width = 15, command=pauseFunction)
 resetMissionClock = tk.Button(root, text ="Reset Mission Clock", command=resetMissionClock)
 extrabutton1 = tk.Button(root, text ="Self Destruct")
 extrambutton2 = tk.Button(root, text ="Restart GUI", command=restart_program)
-groundstationSoftware = tk.Label(root, text="Tracsat Ground Station Software \n Version 1.0.0 \n Copyright 2020. All Rights Reserved. \n Tracsat is a subsidiary of GA Electromagnetic Systems.")
+groundstationSoftware = tk.Label(root, text="Tracsat Ground Station Software \n Version 1.0.0") #\n Copyright 2020. All Rights Reserved. \n Tracsat is a subsidiary of GA Electromagnetic Systems.")
 
 uplinkLabel.grid(row=0,column=0, sticky="W")
 command.grid(row=1,column =0, pady=5)
@@ -153,6 +163,12 @@ root.grid_columnconfigure(5, weight=1)
 
 
 
+#################
+#####DOWNLINK####
+#################
+
+
+
 
 downlinkLabel = tk.Label(root, text='DOWNLINK', font='Helvetica 11 bold')
 currentReceivingLabel = tk.Label(root,text="Receiving:")
@@ -160,11 +176,36 @@ currentReceiving = tk.Label(root,text="LOS", fg="red")
 currentTime = tk.Label(root,font='Helvetica 11')
 GATime = tk.Label(root,font='Helvetica 11')
 moscowTime = tk.Label(root,font='Helvetica 11')
-
+accel_x_label = tk.Label(root,text="X Acceleration:")
+accel_y_label  = tk.Label(root,text="Y Acceleration:")
+direction_label  = tk.Label(root,text="Direction:")
+vel_x_label  = tk.Label(root,text="X Velocity:")
+vel_y_label  = tk.Label(root,text="Y Velocity:")
+accel_x = tk.Label(root,text="0")
+accel_y = tk.Label(root,text="0")
+direction = tk.Label(root,text="0")
+vel_x = tk.Label(root,text="0")
+vel_y = tk.Label(root,text="0")
+accel_x_plot = tk.Button(root, image = plot, width = 17, height = 17)
+accel_y_plot = tk.Button(root, image = plot)
+direction_plot = tk.Button(root, image = plot)
+vel_x_plot = tk.Button(root, image = plot)
+vel_y_plot = tk.Button(root, image = plot)
+write = tk.Button(root, text="Write")
 
 downlinkLabel.grid(row=4,column=0, columnspan=2, pady=5, sticky="W")
 currentReceivingLabel.grid(row=5,column=0,pady=5,sticky="w")
-
+accel_x_label.grid(row=6,column=0,pady=5,sticky="w")
+accel_y_label.grid(row=7,column=0,pady=5,sticky="w")
+vel_x_label.grid(row=8,column=0,pady=5,sticky="w")
+vel_y_label.grid(row=9,column=0,pady=5,sticky="w")
+direction_label.grid(row=10,column=0,pady=5,sticky="w")
+accel_x_plot.grid(row=6,column=2,pady=5,sticky="w")
+accel_y_plot.grid(row=7,column=2,pady=5,sticky="w")
+direction_plot.grid(row=8,column=2,pady=5,sticky="w")
+vel_x_plot.grid(row=9,column=2,pady=5,sticky="w")
+vel_y_plot.grid(row=10,column=2,pady=5,sticky="w")
+write.grid(row=11,column=0,pady=5,sticky="w")
 
 def refresh_serialInput():
     global ser
@@ -201,8 +242,14 @@ def refresh_moscowTime():
 
 currentReceiving.grid(row=5,column=1,pady=5,sticky="w")
 currentTime.grid(row=5,column=5,columnspan=2,pady=5)
-GATime.grid(row=6,column=5,columnspan=2,pady=5)
-moscowTime.grid(row=7,column=5,columnspan=2,pady=5)
+#GATime.grid(row=6,column=5,columnspan=2,pady=5)
+#moscowTime.grid(row=7,column=5,columnspan=2,pady=5)
+
+accel_x.grid(row=6,column=1,pady=5,sticky="w")
+accel_y.grid(row=7,column=1,pady=5,sticky="w")
+vel_x.grid(row=8,column=1,pady=5,sticky="w")
+vel_y.grid(row=9,column=1,pady=5,sticky="w")
+direction.grid(row=10,column=1,pady=5,sticky="w")
 
 
 refresh_currentTime()
@@ -213,6 +260,35 @@ refresh_moscowTime()
 #currentReceiving.after(90, refresh_serialInput)
 
 
+
+
+#################
+######SYSTEM#####
+#################
+
+systemPref = tk.Label(root, text='SYSTEM PREFORMANCE', font='Helvetica 11 bold')
+servoAngleLabel = tk.Label(root,text="Servo Angle:")
+trackingStatusLabel = tk.Label(root,text="Signal Status:")
+airBearingsStatusLabel = tk.Label(root,text="Air Bearings:")
+solenoidsStatusLabel = tk.Label(root,text="Solenoids:")
+raspberryPiStatusLabel = tk.Label(root,text="Raspberry Pi:")
+servoAngle = tk.Label(root,text="8 degrees")
+trackingStatus = tk.Label(root,text="Tracking")
+airBearingsStatus = tk.Label(root,text="Nominal", fg='green')
+solenoidsStatus = tk.Label(root,text="Nominal", fg='green')
+raspberryPiStatus = tk.Label(root,text="Nominal", fg='green')
+
+systemPref.grid(row=12,column=0, columnspan=2, pady=5, sticky="W")
+servoAngleLabel.grid(row=13,column=0, columnspan=2, pady=5, sticky="W")
+trackingStatusLabel.grid(row=14,column=0, columnspan=2, pady=5, sticky="W")
+airBearingsStatusLabel.grid(row=13,column=3, columnspan=2, pady=5, sticky="W")
+solenoidsStatusLabel.grid(row=14,column=3, columnspan=2, pady=5, sticky="W")
+raspberryPiStatusLabel.grid(row=15,column=3, columnspan=2, pady=5, sticky="W")
+servoAngle.grid(row=13,column=1, columnspan=2, pady=5, sticky="W")
+trackingStatus.grid(row=14,column=1, columnspan=2, pady=5, sticky="W")
+airBearingsStatus.grid(row=13,column=4, columnspan=2, pady=5, sticky="W")
+solenoidsStatus.grid(row=14,column=4, columnspan=2, pady=5, sticky="W")
+raspberryPiStatus.grid(row=15,column=4, columnspan=2, pady=5, sticky="W")
 
 tk.mainloop()
 
