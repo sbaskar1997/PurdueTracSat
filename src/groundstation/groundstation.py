@@ -6,6 +6,12 @@ import sys
 from serial import Serial
 from datetime import datetime
 import pytz
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+from itertools import count
+import pandas as pd
+import random
+
 
 if len(sys.argv) < 3:
     print("Error: Groundstation software requires both uplink and downlink ports as CLI arguments \nEx. python groundstation COM3 COM4")
@@ -138,7 +144,7 @@ reset = tk.Button(root, text ="Reset", command=resetFunction)
 abort = tk.Button(root, text ="Abort", command=abort)
 pause = tk.Button(root, text ="Pause", width = 15, command=pauseFunction)
 resetMissionClock = tk.Button(root, text ="Reset Mission Clock", command=resetMissionClock)
-extrabutton1 = tk.Button(root, text ="Self Destruct")
+extrabutton1 = tk.Button(root, text ="Settings")
 extrambutton2 = tk.Button(root, text ="Restart GUI", command=restart_program)
 groundstationSoftware = tk.Label(root, text="Tracsat Ground Station Software \n Version 1.0.0") #\n Copyright 2020. All Rights Reserved. \n Tracsat is a subsidiary of GA Electromagnetic Systems.")
 
@@ -167,6 +173,169 @@ root.grid_columnconfigure(5, weight=1)
 #####DOWNLINK####
 #################
 
+def accel_x_plot_func():
+    x_vals = []
+    y_vals = []
+    index = count()
+    # Initialize
+    x_axis_start = 0
+    x_axis_end = 10
+    #Animate plot
+    def animate(i):
+        data = pd.read_csv('data.csv') #read data
+        x = data['x_value']
+        y1 = data['total_1']
+        plt.cla()
+        plt.axis([len(x)-50, len(x)+50, 0, 1]) #update axis
+        plt.plot(x, y1)    
+        plt.xticks([])
+        plt.title("Acceleration in X Direction")
+        plt.ylabel("Acceleration")
+    ani = FuncAnimation(plt.gcf(), animate, interval=100)
+    plt.show()
+
+def accel_y_plot_func():
+    plt.close(1) 
+    x_vals = []
+    y_vals = []
+    index = count()
+    # Initialize
+    x_axis_start = 0
+    x_axis_end = 10
+    #Animate plot
+    def animate(i):
+        data = pd.read_csv('data.csv') #read data
+        x = data['x_value']
+        y1 = data['total_1']
+        plt.cla()
+        plt.axis([len(x)-50, len(x)+50, 0, 1]) #update axis
+        plt.plot(x, y1)    
+        plt.xticks([])
+        plt.title("Acceleration in Y Direction")
+        plt.ylabel("Acceleration")
+    ani = FuncAnimation(plt.gcf(), animate, interval=100)
+    plt.show()
+
+def vel_x_plot_func():
+    plt.close(1) 
+    x_vals = []
+    y_vals = []
+    index = count()
+    # Initialize
+    x_axis_start = 0
+    x_axis_end = 10
+    #Animate plot
+    def animate(i):
+        data = pd.read_csv('data.csv') #read data
+        x = data['x_value']
+        y1 = data['total_1']
+        plt.cla()
+        plt.axis([len(x)-50, len(x)+50, 0, 1]) #update axis
+        plt.plot(x, y1)    
+        plt.xticks([])
+        plt.title("Velocity in X Direction")
+        plt.ylabel("Velocity")
+    ani = FuncAnimation(plt.gcf(), animate, interval=100)
+    plt.show()
+
+def vel_y_plot_func():
+    plt.close(1) 
+    x_vals = []
+    y_vals = []
+    index = count()
+    # Initialize
+    x_axis_start = 0
+    x_axis_end = 10
+    #Animate plot
+    def animate(i):
+        data = pd.read_csv('data.csv') #read data
+        x = data['x_value']
+        y1 = data['total_1']
+        plt.cla()
+        plt.axis([len(x)-50, len(x)+50, 0, 1]) #update axis
+        plt.plot(x, y1)    
+        plt.xticks([])
+        plt.title("Velocity in Y Direction")
+        plt.ylabel("Velocity")
+    ani = FuncAnimation(plt.gcf(), animate, interval=100)
+    plt.show()
+
+def direction_plot_func():
+    plt.close(1) 
+    x_vals = []
+    y_vals = []
+    index = count()
+    # Initialize
+    x_axis_start = 0
+    x_axis_end = 10
+    #Animate plot
+    def animate(i):
+        data = pd.read_csv('data.csv') #read data
+        x = data['x_value']
+        y1 = data['total_1']
+        plt.cla()
+        plt.axis([len(x)-50, len(x)+50, 0, 1]) #update axis
+        plt.plot(x, y1)    
+        plt.xticks([])
+        plt.title("Direction")
+        plt.ylabel("Angle")
+    ani = FuncAnimation(plt.gcf(), animate, interval=100)
+    plt.show()
+    
+def all_plot_func():
+    plt.close(1) 
+    # Create a figure with two subplots
+    fig = plt.figure()
+    ax1 = fig.add_subplot(5,1,1)
+    ax2 = fig.add_subplot(5,1,2)
+    ax3 = fig.add_subplot(5,1,3)
+    ax4 = fig.add_subplot(5,1,4)
+    ax5 = fig.add_subplot(5,1,5)
+    # Adjust spacing between plots
+    plt.subplots_adjust(top = 0.93, bottom = 0.07, hspace = 0.6)
+    #define the function for use in matplotlib.animation.funcAnimation
+    def animate(i):
+        data = pd.read_csv('data.csv') #read data
+        x = data['x_value']
+        y1 = data['total_1']
+        # Set subplot data
+        xlim = len(y1)
+
+        ax1.clear()
+        ax1.plot(y1)
+        ax1.set_xlim(xlim - 30, xlim)
+        ax1.set_xticks([])
+
+        ax2.clear()
+        ax2.plot(y1)
+        ax2.set_xlim(xlim - 30, xlim)
+        ax2.set_xticks([])
+
+        ax3.clear()
+        ax3.plot(y1)
+        ax3.set_xlim(xlim - 30, xlim)
+        ax3.set_xticks([])
+
+        ax4.clear()
+        ax4.plot(y1)
+        ax4.set_xlim(xlim - 30, xlim)
+        ax4.set_xticks([])
+
+        ax5.clear()
+        ax5.plot(y1)
+        ax5.set_xlim(xlim - 30, xlim)
+        ax5.set_xticks([])
+
+
+        # Set subplot titles
+        ax1.set_title("X Acceleration")
+        ax2.set_title("Y Acceleration")
+        ax3.set_title("X Velocity")
+        ax4.set_title("Y Velocty")
+        ax5.set_title("Direction")
+
+    ani = FuncAnimation(fig, animate, interval=100)
+    plt.show()
 
 
 
@@ -186,12 +355,14 @@ accel_y = tk.Label(root,text="0")
 direction = tk.Label(root,text="0")
 vel_x = tk.Label(root,text="0")
 vel_y = tk.Label(root,text="0")
-accel_x_plot = tk.Button(root, image = plot, width = 17, height = 17)
-accel_y_plot = tk.Button(root, image = plot)
-direction_plot = tk.Button(root, image = plot)
-vel_x_plot = tk.Button(root, image = plot)
-vel_y_plot = tk.Button(root, image = plot)
+accel_x_plot = tk.Button(root, image = plot, width = 17, height = 17, command=accel_x_plot_func)
+accel_y_plot = tk.Button(root, image = plot, command=accel_y_plot_func)
+direction_plot = tk.Button(root, image = plot, command=direction_plot_func)
+vel_x_plot = tk.Button(root, image = plot, command=vel_x_plot_func)
+vel_y_plot = tk.Button(root, image = plot, command=vel_y_plot_func)
 write = tk.Button(root, text="Write")
+allPlots = tk.Button(root, text="All Plots", command=all_plot_func)
+
 
 downlinkLabel.grid(row=4,column=0, columnspan=2, pady=5, sticky="W")
 currentReceivingLabel.grid(row=5,column=0,pady=5,sticky="w")
@@ -202,10 +373,11 @@ vel_y_label.grid(row=9,column=0,pady=5,sticky="w")
 direction_label.grid(row=10,column=0,pady=5,sticky="w")
 accel_x_plot.grid(row=6,column=2,pady=5,sticky="w")
 accel_y_plot.grid(row=7,column=2,pady=5,sticky="w")
-direction_plot.grid(row=8,column=2,pady=5,sticky="w")
-vel_x_plot.grid(row=9,column=2,pady=5,sticky="w")
-vel_y_plot.grid(row=10,column=2,pady=5,sticky="w")
+vel_x_plot.grid(row=8,column=2,pady=5,sticky="w")
+vel_y_plot.grid(row=9,column=2,pady=5,sticky="w")
+direction_plot.grid(row=10,column=2,pady=5,sticky="w")
 write.grid(row=11,column=0,pady=5,sticky="w")
+allPlots.grid(row=11,column=2,pady=5)
 
 def refresh_serialInput():
     global ser
@@ -239,6 +411,9 @@ def refresh_moscowTime():
     timeString = moscowTimezone.strftime("%H:%M:%S")
     moscowTime.config(text="Moscow Time:\t" + timeString)
     moscowTime.after(1000,refresh_moscowTime)
+
+
+
 
 currentReceiving.grid(row=5,column=1,pady=5,sticky="w")
 currentTime.grid(row=5,column=5,columnspan=2,pady=5)
