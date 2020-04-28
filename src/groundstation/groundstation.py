@@ -135,6 +135,12 @@ def abort():
     currentTransmission.config(text= "Abort Code")
     stopMissionClock = 1
 
+def settings():
+    window = tk.Toplevel(root)
+
+    ## ADD SETTINGS HERE
+
+
 refresh_missionClock()
 
 
@@ -144,7 +150,7 @@ reset = tk.Button(root, text ="Reset", command=resetFunction)
 abort = tk.Button(root, text ="Abort", command=abort)
 pause = tk.Button(root, text ="Pause", width = 15, command=pauseFunction)
 resetMissionClock = tk.Button(root, text ="Reset Mission Clock", command=resetMissionClock)
-extrabutton1 = tk.Button(root, text ="Settings")
+extrabutton1 = tk.Button(root, text ="  Settings  ", command=settings)
 extrambutton2 = tk.Button(root, text ="Restart GUI", command=restart_program)
 groundstationSoftware = tk.Label(root, text="Tracsat Ground Station Software \n Version 1.0.0") #\n Copyright 2020. All Rights Reserved. \n Tracsat is a subsidiary of GA Electromagnetic Systems.")
 
@@ -300,44 +306,34 @@ def all_plot_func():
         y1 = data['total_1']
         # Set subplot data
         xlim = len(y1)
-
         ax1.clear()
         ax1.plot(y1)
         ax1.set_xlim(xlim - 30, xlim)
         ax1.set_xticks([])
-
         ax2.clear()
         ax2.plot(y1)
         ax2.set_xlim(xlim - 30, xlim)
         ax2.set_xticks([])
-
         ax3.clear()
         ax3.plot(y1)
         ax3.set_xlim(xlim - 30, xlim)
         ax3.set_xticks([])
-
         ax4.clear()
         ax4.plot(y1)
         ax4.set_xlim(xlim - 30, xlim)
         ax4.set_xticks([])
-
         ax5.clear()
         ax5.plot(y1)
         ax5.set_xlim(xlim - 30, xlim)
         ax5.set_xticks([])
-
-
         # Set subplot titles
         ax1.set_title("X Acceleration")
         ax2.set_title("Y Acceleration")
         ax3.set_title("X Velocity")
         ax4.set_title("Y Velocty")
         ax5.set_title("Direction")
-
     ani = FuncAnimation(fig, animate, interval=100)
     plt.show()
-
-
 
 downlinkLabel = tk.Label(root, text='DOWNLINK', font='Helvetica 11 bold')
 currentReceivingLabel = tk.Label(root,text="Receiving:")
