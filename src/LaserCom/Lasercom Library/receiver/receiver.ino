@@ -49,11 +49,12 @@ void convertToText(int bits[]){
         sum = sum +  (pow(2,i) * (bits[j]));
         j++;
     }
+   
     char aChar = (int) lround(sum);
-    Serial.print(aChar);
-
     if (aChar == '#'){
       Serial.println("");
+    } else {
+      Serial.print(aChar);
     }
     /*
     for (int l = 0; l < 8; l++){
