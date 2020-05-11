@@ -1,10 +1,12 @@
 # PurdueTracSat
-Repository for AAE 490 TracSat class Fall/Spring 2019
-All code to control satellite will be put in src folder. src folder will be restructured as necessary.
-Check update logs and/or readme for information about the project
+### Repository for AAE 490 TracSat class Fall/Spring 2019
+
+All code pertaining to the project is inside the 'src' folder. This includes the lasercom, groundstation, computer vision, and testbed subprojects. 
+
+The final report for the class can be read [here](https://github.com/sbaskar1997/PurdueTracSat/blob/master/docs/TracSat%20Final%20Report.pdf). 
 
 
+### Team Members:
+Braden Anderson, Sandeep Baskar, Josh Fitch, Wellington Froelich, Pol Francesch Huc, Alec Leven, Robert Miller, Yash Pahade, Pat Pesa, Bethany Price, Ben Ranft, and Dante Sanaei.
 
-Team Members:
-Sandeep Baskar, Pol Francesch Huc, Dante Sanaei, Joshua Fitch, Yash Pahade, Alec Leven, Ben Ranft
-
+Special Thanks to Glynn Smith and Dr. Shashurin.
