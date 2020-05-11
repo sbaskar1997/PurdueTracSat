@@ -1,0 +1,59 @@
+#Code for porting testbed object avoidance demo to CubeSat+Base
+#!usr/bin/env python
+# Import native modules
+import numpy as np
+import time
+
+# Import custom modules
+from Camera import Camera
+#from easygopigo3 import EasyGoPiGo3
+from detection_demo import detection_demo
+from ThreadWorker import *
+import Solenoids
+import pigpio
+#Initialziation function
+def init_pi():
+    pi = pigpio.pi()
+    return pi
+def purge_pi(pi):
+    keys =[18,23,24,25,12,16,20,21]
+    for n in keys:
+        pi.write(n,0)def move_forward(time_flight =1):
+    if (time_flight !=0):
+	pi = init_pi()
+	
+def obstaclesat():
+    
+    # Initialize testbed motors
+    #gpg = EasyGoPiGo3()
+    #gpg.forward()
+    [circle_detected, center, obj_distance] = detection_demo()
+    #gpg.stop()
+    if (center[0] > 320):
+        direction = 'right'
+        rotate_dir = -1
+    else:
+        direction = 'left'
+        rotate_dir = 1
+ 
+    # Rotate camera gradually until object is no longer detected
+    angle_rotated = 0
+    
+    while (circle_detected):
+        gpg.turn_degrees(rotate_dir * 10)
+        [circle_detected, center, obj_distance] = detection_demo(infinite_loop = False)
+        angle_rotated += 10
+
+    # Final turn to avoid grazing object after circle no longer in view
+    gpg.turn_degrees(rotate_dir * 20)        
+    gpg.forward()
+    time.sleep(5)
+    gpg.stop()
+    
+
+        
+obstaclesat()
+        
+        
+
+
