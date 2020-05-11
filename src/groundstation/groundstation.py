@@ -12,16 +12,20 @@ from itertools import count
 import pandas as pd
 import random
 
+###To run this program: python groundstation.py <laserport> <receiverport>###
 
+
+
+# Check for serial port names
 if len(sys.argv) < 3:
     print("Error: Groundstation software requires both uplink and downlink ports as CLI arguments \nEx. python groundstation COM3 COM4")
     sys.exit()
 
-
+#General setup
 coms = lasercom()
-uplinkPort = sys.argv[1]
-downlinkPort = sys.argv[2]
-coms.resetArduino(uplinkPort)
+uplinkPort = sys.argv[1] #Name of the serial port for the laser arduino
+downlinkPort = sys.argv[2] #Name of the serial port for the reciever arduino
+coms.resetArduino(uplinkPort) #reset laser arduino at the start
 ser = Serial(downlinkPort, 9600)
 root = tk.Tk()
 root.title("TracSat Ground Station")
@@ -35,11 +39,11 @@ hours_MC = 0
 stopMissionClock = 1
 plot = tk.PhotoImage(file = r"icon_small.png")
 
+
+
 #################
 ######UPLINK#####
 #################
-
-
 
 uplinkLabel = tk.Label(root, text='UPLINK', font='Helvetica 11 bold')
 command = tk.Label(root, text="Command:")
@@ -49,6 +53,7 @@ currentTransmission = tk.Label(root, text="No Transmission", fg="red")
 missionClock = tk.Label(root,text="Mission Clock:\t00:00:00", font='Helvetica 11')
 missionClock.grid(row=3,column=5,pady=5, padx=10)
 
+#Mission Clock 
 def refresh_missionClock():
     global seconds_MC
     global minutes_MC
@@ -67,7 +72,7 @@ def refresh_missionClock():
     missionClock.config(text='Mission Clock:\t%02d:%02d:%02d' % (hours_MC, minutes_MC,seconds_MC))
     missionClock.after(1000, refresh_missionClock)
 
-
+#Transmit button
 def transmitFunction():
     command = commandEntry.get()
     global stopMissionClock
@@ -80,6 +85,7 @@ def transmitFunction():
         currentTransmission.config(text= command)
         stopMissionClock = 0
 
+#Reset mission clock function
 def resetMissionClock():
     global seconds_MC
     global minutes_MC
@@ -90,6 +96,7 @@ def resetMissionClock():
     hours_MC = 0
     stopMissionClock = 0  
 
+# Reset button
 def resetFunction():
     global seconds_MC
     global minutes_MC
@@ -104,6 +111,7 @@ def resetFunction():
     minutes_MC = 0
     hours_MC = 0
 
+#Pause button
 def pauseFunction():
     global stopMissionClock
     if pause["text"] == "Pause":
@@ -124,10 +132,12 @@ def pauseFunction():
         pause.config(text='Pause')
         stopMissionClock = 0
 
+#Restart button
 def restart_program():
     python = sys.executable
     os.execl(python, python, * sys.argv)
 
+#Abrort button (Sends "Abort")
 def abort():
     global stopMissionClock
     coms.sendData(uplinkPort, "abort")
